@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid">
+            <h1 class="mt-4">Signal</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Live Signal</li>
+            </ol>
+            {% include 'main.html' %}
+            
+            <div class="card mb-4">
+                <div class="row">
+                    <div class="card-header col">
+                        <i class="fas fa-signal mr-1"></i>
+                        Live Signal
+                    </div>
+                    <div class="card-header col">
+                        <div class="row  justify-content-md-center">
+                            <div class="col-md-4">
+                                <i class="fas fa-flag mr-1"></i>
+                                Total Symbols
+                            </div>
+                            <div class="col-md-4">
+                                {{ symbols }}
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ExchangeSymbol</th>
+                                    <th>InputSymbol</th>
+                                    <th>Exchange</th>
+                                    <th>InstrumentName</th>
+                                    <th>EntryOrderType</th>
+                                    <th>ExitOrderType</th>
+                                    <th>Quantity</th>
+                                    <th>ProductType</th>
+                                    <th>MaxProfit</th>
+                                    <th>MaxLoss</th>
+                                    <th>StrategyTag</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="background-color:{{ color }};">
+                                    <td>RAMCOCEM</td>
+                                    <td>RAMCOCEM#</td>
+                                    <td>NSECM</td>
+                                    <td>EQ</td>
+                                    <td>Market</td>
+                                    <td>Market</td>
+                                    <td>500</td>
+                                    <td>MIS</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>START1</td>
+                                    <td><button type="button" class="btn btn-outline-danger"><i class="fa fa-trash"
+                                                aria-hidden="true"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+    {% endblock content %}
