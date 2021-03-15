@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import home,signal,order_history,trade_history,signal_source,live_signal,loginwithapi
+from .views import home,signal,order_history,trade_history,signal_source,live_signal,loginwithapi,get_symbols
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -10,6 +10,7 @@ urlpatterns = [
     path("source/",login_required(signal_source),name="source"),
     path("live_signal",login_required(live_signal),name="live"),
     path("api_login",login_required(loginwithapi),name="api"),
+    path("get_symbols/", get_symbols, name="get_symbols")
 
 
 ]
