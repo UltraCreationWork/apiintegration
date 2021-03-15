@@ -21,7 +21,7 @@ class StockExchange(M):
 
 
 class StockSymbolTable(M):
-	stock_name = models.CharField(max_length=200, verbose_name="Stock Name")
+	stock_name = models.CharField(max_length=200, verbose_name="Stock Name", null=True, blank=True)
 	stock_symbols = models.CharField(max_length=20, verbose_name="Stock Symbols")
 	stock_exchange = models.ManyToManyField(StockExchange,related_name="StockExchanges")
 	# stock_exchange = ArrayField(models.CharField(max_length=20), null=True, blank=True)

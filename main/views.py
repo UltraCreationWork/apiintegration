@@ -6,32 +6,49 @@ import requests
 from django.http import JsonResponse
 import json
 import pandas as pd
-initialize(               
-		login=33003,              
-		password="pdge2iej",     
-		server="Sharon-Live",                   
-		portable=False         
-	)
-symbols_total=symbols_total()
-exchange_list=['USD','NSE', 'BSE', 'FOREX']
+from nsetools import Nse
 
-def get_symbols(request):
-	data=dict()
-	for i in exchange_list:
-		symbols = symbols_get(group=i)
-		data[i]=symbols
-	maindata = pd.Series(data)
-	# print(maindata)
-	print(data)
-	data=json.dumps(symbols)
-	print(data)
-	return JsonResponse(data,safe=False)
+# initialize(               
+# 		login=33003,              
+# 		password="pdge2iej",     
+# 		server="Sharon-Live",                   
+# 		portable=False         
+# # 	)
+# symbols_total=symbols_total()
+# exchange_list=['USD','NSE', 'BSE', 'FOREX']
 
 
+# def get_symbols(request):
+# 	data=dict()
+# 	for i in exchange_list:
+# 		symbols = symbols_get(group=i)
+# 		data[i]=symbols
+# 	maindata = pd.Series(data)
+# 	# print(maindata)
+# 	print(data)
+# 	data=json.dumps(symbols)
+# 	print(data)
+# 	return JsonResponse(data,safe=False)
+
+nse = Nse()
 
 def home(request):
-	return render(request,"index.html",{"symbols":symbols_total})
+	return render(request,"index.html",{"symbols": 500})
 
+def symbols(request):
+	all_stock_codes = nse.get_stock_codes()
+	return JsonResponse(all_stock_codes,safe=False)
+
+def nse_index_quote(request):
+	# if request.method=='POST':
+	# 	q = nse.get_quote(request.POST.get('symbol'))
+	# 	return JsonResponse(q, safe=False)
+	q = nse.get_quote('BHARTIARTL')
+	return JsonResponse(q, safe=False)
+
+def nse_lot_size(request):
+	data = nse.get_fno_lot_sizes()
+	return JsonResponse(data, safe=False)
 
 
 def order_history(request):
