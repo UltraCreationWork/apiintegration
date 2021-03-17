@@ -3,10 +3,24 @@ from django.contrib.auth.models import User
 import random
 from MetaTrader5 import *
 import requests
+from .models import *
 from django.http import JsonResponse
 import json
 import pandas as pd
 from nsetools import Nse
+from django.conf import settings
+
+# json_data = open(str(settings.BASE_DIR) + '\\main\\stock_name_symbols.json')   
+# data1 = json.load(json_data) # deserialises it
+# data2 = json.dumps(data1) # json formatted string
+# NSE=StockExchange.objects.get(id=1)
+
+# # Output: {'name': 'Bob', 'languages': ['English', 'Fench']}
+# print(type(data1))
+# for key, value in data1.items():
+# 	i = StockSymbolTable.objects.create(stock_name=value, stock_symbols=key)
+# 	i.stock_exchange.add(NSE)
+# 	print("completed")
 
 # initialize(               
 # 		login=33003,              

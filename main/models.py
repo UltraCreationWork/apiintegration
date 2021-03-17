@@ -11,7 +11,10 @@ class StockExchange(M):
 		ordering = ['-exchange_name']
 		
 	def __str__(self):
-		return self.stock_symbols
+		return self.exchange_name
+
+	def __unicode__(self):
+	   return self.exchange_name
 
 	def serialize(self):
 		return {
@@ -39,6 +42,10 @@ class StockSymbolTable(M):
 			"stock name": self.stock_name,
 			"stock symbols": self.stock_symbols
 		}
+
+	def get_stock_exchanges(self):
+		return "\n".join([str(p) for p in self.stock_exchange.all()])
+
 
 
 
