@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 import random
-from MetaTrader5 import *
+# from MetaTrader5 import *
 import requests
 from .models import *
 from django.http import JsonResponse
