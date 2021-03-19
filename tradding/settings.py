@@ -92,7 +92,17 @@ DATABASES = {
     }
 }
 
-
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:16379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
+        "KEY_PREFIX": "example"
+    }
+}
+CACHE_TIMEOUT = 3600
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -170,4 +180,8 @@ SERVER_EMAIL = 'ishwarjethwaniillustration@gmail.com'
 
 
 django_heroku.settings(locals())
-
+REDIS_HOST = 'localhost'
+REDIS_PORT = 16379
+CACHE_TTL = 60 * 5
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"

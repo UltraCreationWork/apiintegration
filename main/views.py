@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 import random
-# from MetaTrader5 import *
 import requests
 from .models import *
 from django.http import JsonResponse
@@ -9,49 +8,37 @@ import json
 import pandas as pd
 from nsetools import Nse
 from django.conf import settings
-
-# json_data = open(str(settings.BASE_DIR) + '\\main\\stock_name_symbols.json')   
-# data1 = json.load(json_data) # deserialises it
-# data2 = json.dumps(data1) # json formatted string
-# NSE=StockExchange.objects.get(id=1)
-
-# # Output: {'name': 'Bob', 'languages': ['English', 'Fench']}
-# print(type(data1))
-# for key, value in data1.items():
-# 	i = StockSymbolTable.objects.create(stock_name=value, stock_symbols=key)
-# 	i.stock_exchange.add(NSE)
-# 	print("completed")
-
-# initialize(               
-# 		login=33003,              
-# 		password="pdge2iej",     
-# 		server="Sharon-Live",                   
-# 		portable=False         
-# # 	)
-# symbols_total=symbols_total()
-# exchange_list=['USD','NSE', 'BSE', 'FOREX']
-
-
-# def get_symbols(request):
-# 	data=dict()
-# 	for i in exchange_list:
-# 		symbols = symbols_get(group=i)
-# 		data[i]=symbols
-# 	maindata = pd.Series(data)
-# 	# print(maindata)
-# 	print(data)
-# 	data=json.dumps(symbols)
-# 	print(data)
-# 	return JsonResponse(data,safe=False)
-
-nse = Nse()
+from django.core.cache import cache
 
 def home(request):
-	return render(request,"index.html",{"symbols": 500})
+	symbol=""
+	if symbol in cache:
+		context = cache.get(symbol)
+		print("getting context from cache --->",context)
+		return render(request,"index.html",context)
+	else:
+		symbols = StockSymbolTable.objects.all().count()
+		context = {
+			"total_symbols_count": symbols,
 
-def symbols(request):
-	all_stock_codes = nse.get_stock_codes()
-	return JsonResponse(all_stock_codes,safe=False)
+		}
+		print("getting context from db --->",context)
+		cache.set(symbol, context, timeout=settings.CACHE_TIMEOUT)
+		return render(request,"index.html", context)
+
+
+def get_stock_details_by_symbol(request):
+	symbol_name = request.GET.get('q')
+	if symbol_name in request.GET:
+		if symbol_name in cache:
+			context=cache.get(symbol_name)
+			print("getting context from cache --->",context)
+			return JsonResponse(context, safe=False)
+		else:
+			context = StockSymbolTable.objects.filter(stock_symbols=symbol_name)
+			print("getting context from db --->",context)
+			cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)
+			return JsonResponse(context, safe=False)
 
 def nse_index_quote(request):
 	# if request.method=='POST':

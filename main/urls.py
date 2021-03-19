@@ -10,7 +10,7 @@ urlpatterns = [
     path("source/",login_required(signal_source),name="source"),
     path("live_signal",login_required(live_signal),name="live"),
     path("api_login",login_required(loginwithapi),name="api"),
-    path("symbols/", symbols, name="symbols"),
+    path("symboldetails/", get_stock_details_by_symbol, name="symboldetails"),
     path("indexquote/", nse_index_quote, name="indexquote"),
     path("nselotsize/", nse_lot_size, name="nselotsize")
 
