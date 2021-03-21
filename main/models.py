@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Model as M
-import uuid
+from .utils import unique_order_id_generator
+from django.db.models.signals import pre_save
 
 # from django_postgres_extensions.models.fields import ArrayField
 # Create your models here.
@@ -63,7 +64,7 @@ stratgy = (
 )
 
 class PlaceOrder(M):
-	order_id  = models.UUIDField(default=uuid.uuid4(), unique=True, db_index=True, editable=False)
+	order_id  = models.CharField(max_length=120,blank=True,unique=True)
 	exchange_symbol = models.CharField(max_length=20,verbose_name="ExChange Symbol")
 	input_symbol = models.CharField(max_length=20,verbose_name="Input Symbol")
 	exchange_name = models.ManyToManyField(StockExchange)
@@ -74,10 +75,17 @@ class PlaceOrder(M):
 	max_profit = models.FloatField(verbose_name="Maximum Profit")
 	max_loss = models.FloatField(verbose_name="Maximum Loss")
 	strategy_tag = models.CharField(max_length=50,choices=stratgy,verbose_name="StrategyTag")
-	date_time = models.DateTimeField(auto_now_add=True,verbose_name="Date of Order")
+	date_time = models.DateTimeField(auto_created=True,verbose_name="Date of Order")
 
 	def __unicode__(self):
 		return self.order_id
 	
 	class Meta:
 		ordering = ["-date_time"]
+
+def pre_save_create_order_id(sender, instance, *args, **kwargs):
+    if not instance.order_id:
+        instance.order_id= unique_order_id_generator(instance)
+
+
+pre_save.connect(pre_save_create_order_id, sender=PlaceOrder)

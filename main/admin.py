@@ -18,9 +18,5 @@ admin.site.register(StockSymbolTable, StockSymbolTableAdmin)
 
 class PlaceOrderAdmin(admin.ModelAdmin):
     list_display = ('order_id','date_time','exchange_symbol')
-    fields = (
-        'order_id',
-        'date_time',
-        'exchange_symbol',
-        )
+
 admin.site.register(PlaceOrder, PlaceOrderAdmin)
