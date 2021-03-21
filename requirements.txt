@@ -15,10 +15,12 @@ dj-database-url==0.5.0
 Django==3.1.6
 django-allauth==0.44.0
 django-bootstrap4==2.3.1
+django-filter==2.4.0
 django-heroku==0.3.1
 django-redis==4.12.1
 django-storages==1.11.1
 finnhub-python==2.4.0
+fyers-api==1.0.9
 get-all-tickers==1.7
 gunicorn==20.0.4
 idna==2.10
@@ -47,6 +49,7 @@ six==1.15.0
 soupsieve==2.2
 sqlparse==0.4.1
 toml==0.10.2
+tornado==6.1
 tradingview-ta==3.2.2
 urllib3==1.26.3
 whitenoise==5.2.0
