@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Model as M
+import uuid
 
 # from django_postgres_extensions.models.fields import ArrayField
 # Create your models here.
@@ -47,5 +48,36 @@ class StockSymbolTable(M):
 		return "\n".join([str(p) for p in self.stock_exchange.all()])
 
 
+type=(
+	("Market","Market"),
+)
 
+product_type = (
+	("MIS","MIS"),
+)
 
+stratgy = (
+	("START1","START"),
+	("START2","START2"),
+	("START3","START3"),
+)
+
+class PlaceOrder(M):
+	order_id  = models.UUIDField(default=uuid.uuid4(), unique=True, db_index=True, editable=False)
+	exchange_symbol = models.CharField(max_length=20,verbose_name="ExChange Symbol")
+	input_symbol = models.CharField(max_length=20,verbose_name="Input Symbol")
+	exchange_name = models.ManyToManyField(StockExchange)
+	instrumentname = models.CharField(max_length=20,verbose_name="InstrumentName")
+	entryordertype = models.CharField(choices=type,max_length=50,verbose_name="EntryOrederType")
+	quantity = models.PositiveIntegerField(verbose_name="Quantity")
+	product_type = models.CharField(choices=product_type,max_length=50,verbose_name="PoductType")
+	max_profit = models.FloatField(verbose_name="Maximum Profit")
+	max_loss = models.FloatField(verbose_name="Maximum Loss")
+	strategy_tag = models.CharField(max_length=50,choices=stratgy,verbose_name="StrategyTag")
+	date_time = models.DateTimeField(auto_now_add=True,verbose_name="Date of Order")
+
+	def __unicode__(self):
+		return self.order_id
+	
+	class Meta:
+		ordering = ["-date_time"]

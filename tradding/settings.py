@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'main',
-    "bootstrap4",
+    'bootstrap4',
+    'django_filters',
+    'crispy_forms',
 
     'allauth',
     'allauth.account',
@@ -50,6 +52,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -95,7 +98,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:16379/1",
+        "LOCATION": "redis://127.0.0.1:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         },
@@ -181,7 +184,7 @@ SERVER_EMAIL = 'ishwarjethwaniillustration@gmail.com'
 
 django_heroku.settings(locals())
 REDIS_HOST = 'localhost'
-REDIS_PORT = 16379
+REDIS_PORT = 6379
 CACHE_TTL = 60 * 5
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"

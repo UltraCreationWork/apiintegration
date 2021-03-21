@@ -9,36 +9,30 @@ import pandas as pd
 from nsetools import Nse
 from django.conf import settings
 from django.core.cache import cache
+from .forms import StockForm
 
-def home(request):
-	symbol=""
-	if symbol in cache:
-		context = cache.get(symbol)
-		print("getting context from cache --->",context)
-		return render(request,"index.html",context)
-	else:
-		symbols = StockSymbolTable.objects.all().count()
-		context = {
-			"total_symbols_count": symbols,
+def data(request):
 
-		}
-		print("getting context from db --->",context)
-		cache.set(symbol, context, timeout=settings.CACHE_TIMEOUT)
-		return render(request,"index.html", context)
-
-
-def get_stock_details_by_symbol(request):
-	symbol_name = request.GET.get('q')
-	if symbol_name in request.GET:
-		if symbol_name in cache:
-			context=cache.get(symbol_name)
-			print("getting context from cache --->",context)
-			return JsonResponse(context, safe=False)
+	query = request.GET.get("stock_symbols")
+	if "stock_symbols" in request.GET:
+		if query in cache:
+			context=cache.get(query)
+			symbols_cache = list()
+			for symbol in context:
+				symbols_cache.append(symbol.stock_symbols)
+			return JsonResponse(symbols_cache, safe=False)
 		else:
-			context = StockSymbolTable.objects.filter(stock_symbols=symbol_name)
-			print("getting context from db --->",context)
-			cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)
-			return JsonResponse(context, safe=False)
+			context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
+			symbols = list()
+			for symbol in context:
+				symbols.append(symbol.stock_symbols)
+			cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)	
+			return JsonResponse(symbols, safe=False)
+		
+def home(request):
+	return render(request,"index.html")
+
+
 
 def nse_index_quote(request):
 	# if request.method=='POST':
