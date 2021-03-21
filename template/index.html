@@ -3,6 +3,8 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
 <script>
 	$(function () {
 		$("#id_stock_symbols").autocomplete({
@@ -80,29 +82,53 @@
 							</thead>
 							<tbody>
 								<tr>
-									<td>
-										<form method="GET">
-											{{ form|crispy }}
-										</form>
+									<form method="POST" action=".">
+										{% csrf_token %}
+										<td>
+											{{ form.exchange_symbol|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.input_symbol|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.exchange_name|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.instrumentname|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.entryordertype|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.exitordertype|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.quantity|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.product_type|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.max_profit|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.max_loss|as_crispy_field }}
+										</td>
+										<td>
+											{{ form.strategy_tag|as_crispy_field }}
+										</td>
 
-									</td>
-									<td>RAMCOCEM#</td>
-									<td>NSECM</td>
-									<td>EQ</td>
-									<td>Market</td>
-									<td>Market</td>
-									<td>500</td>
-									<td>MIS</td>
-									<td>-</td>
-									<td>-</td>
-									<td>START1</td>
-									<td><button id="addRow" type="button" class="btn btn-outline-danger"><i class="fa fa-trash"
-												aria-hidden="true"></i></button></td>
+										<td><button id="addRow" type="submit" class="btn btn-outline-primary"><i
+													class="fa fa-check" aria-hidden="true"></i></button></td>
+
+
+									</form>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</div>
+
 
 			</div>
 			<div class="row">
@@ -142,25 +168,25 @@
 		}
 	</script>
 	<script>
-		$(document).ready(function() {
+		$(document).ready(function () {
 			var t = $('#example').DataTable();
 			var counter = 1;
-		 
-			$('#addRow').on( 'click', function () {
-				t.row.add( [
-					counter +'.1',
-					counter +'.2',
-					counter +'.3',
-					counter +'.4',
-					counter +'.5'
-				] ).draw( false );
-		 
+
+			$('#addRow').on('click', function () {
+				t.row.add([
+					counter + '.1',
+					counter + '.2',
+					counter + '.3',
+					counter + '.4',
+					counter + '.5'
+				]).draw(false);
+
 				counter++;
-			} );
-		 
+			});
+
 			// Automatically add a first row of data
 			$('#addRow').click();
-		} );
+		});
 	</script>
 
 

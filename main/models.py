@@ -49,7 +49,7 @@ class StockSymbolTable(M):
 		return "\n".join([str(p) for p in self.stock_exchange.all()])
 
 
-type=(
+type_=(
 	("Market","Market"),
 )
 
@@ -58,7 +58,7 @@ product_type = (
 )
 
 stratgy = (
-	("START1","START"),
+	("START1","START1"),
 	("START2","START2"),
 	("START3","START3"),
 )
@@ -69,13 +69,14 @@ class PlaceOrder(M):
 	input_symbol = models.CharField(max_length=20,verbose_name="Input Symbol")
 	exchange_name = models.ManyToManyField(StockExchange)
 	instrumentname = models.CharField(max_length=20,verbose_name="InstrumentName")
-	entryordertype = models.CharField(choices=type,max_length=50,verbose_name="EntryOrederType")
+	entryordertype = models.CharField(choices=type_,max_length=50,verbose_name="EntryOrederType")
+	exitordertype = models.CharField(choices=type_,max_length=50,verbose_name="ExitOrederType")
 	quantity = models.PositiveIntegerField(verbose_name="Quantity")
 	product_type = models.CharField(choices=product_type,max_length=50,verbose_name="PoductType")
 	max_profit = models.FloatField(verbose_name="Maximum Profit")
 	max_loss = models.FloatField(verbose_name="Maximum Loss")
 	strategy_tag = models.CharField(max_length=50,choices=stratgy,verbose_name="StrategyTag")
-	date_time = models.DateTimeField(auto_created=True,verbose_name="Date of Order")
+	date_time = models.DateTimeField(auto_now_add=True,verbose_name="Date of Order")
 
 	def __unicode__(self):
 		return self.order_id

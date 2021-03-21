@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 import random
 import requests
@@ -9,12 +10,11 @@ import pandas as pd
 from nsetools import Nse
 from django.conf import settings
 from django.core.cache import cache
-from .forms import StockForm
+from .forms import OrderForm
 
 def data(request):
-
-	query = request.GET.get("stock_symbols")
-	if "stock_symbols" in request.GET:
+	query = request.GET.get("exchange_symbol")
+	if "exchange_symbol" in request.GET:
 		if query in cache:
 			context=cache.get(query)
 			symbols_cache = list()
@@ -30,7 +30,13 @@ def data(request):
 			return JsonResponse(symbols, safe=False)
 		
 def home(request):
-	return render(request,"index.html")
+	form = OrderForm(request.POST or request.GET or None)
+	if request.method == "POST":
+		if form.is_valid():
+			print(form.data)
+			form.save()
+			return HttpResponse("success")
+	return render(request,"index.html",{"form":form})
 
 
 
