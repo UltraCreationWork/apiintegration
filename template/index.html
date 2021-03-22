@@ -1,18 +1,18 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>       
+
 
 
 <script>
 	$(function () {
-		$("#id_stock_symbols").autocomplete({
+		$("#id_exchange_symbol").autocomplete({
 			source: function (request, response) {
 				$.ajax({
-					url: "{% url 'data' %}",
+					url: "{% url 'home' %}",
 					data: {
-						stock_symbols: request.term
+						stock_symbols:""
 					},
 					dataType: "json",
 					success: response,
@@ -45,8 +45,8 @@
 			<div class="card mb-4">
 				<div class="row">
 					<div class="card-header col">
-						<i class="fas fa-table mr-1"></i>
-						DataTable
+						<button id="add" type="submit" class="btn btn-outline-success"><i
+							class="fa fa-plus" aria-hidden="true"></i></button>
 					</div>
 					<div class="card-header col">
 						<div class="row  justify-content-md-center">
@@ -80,7 +80,7 @@
 									<th>Action</th>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody id="table_id">
 								<tr>
 									<form method="POST" action=".">
 										{% csrf_token %}
@@ -168,26 +168,25 @@
 		}
 	</script>
 	<script>
-		$(document).ready(function () {
-			var t = $('#example').DataTable();
-			var counter = 1;
-
-			$('#addRow').on('click', function () {
-				t.row.add([
-					counter + '.1',
-					counter + '.2',
-					counter + '.3',
-					counter + '.4',
-					counter + '.5'
-				]).draw(false);
-
-				counter++;
+		$('#add').on('click', function(e) {
+			$.ajax({
+				url : '/',
+				type : 'GET',
+				dataType : 'json',
+				success : function(data) {
+					$('#table_id').append("<tr><td>" + "{{ form.exchange_symbol|as_crispy_field }}" + "</td><td>" + data.column2 + "</td><td>" + data.column3 + "</td></tr>");
+				},
+				error : function() {
+					console.log('error');
+				}
 			});
-
-			// Automatically add a first row of data
-			$('#addRow').click();
 		});
 	</script>
+	<!-- <script>
+		$("<tr><td>.....content...<td><a class='remove'>remove</a>").appendTo("#tableid tbody").find('.remove').click(function () {
+			$(this).parent().parent().remove();
+		});
+	</script> -->
 
 
 	{% endblock content %}

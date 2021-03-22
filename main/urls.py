@@ -9,7 +9,7 @@ from .views import (
     trade_history,
     live_signal,
     loginwithapi,
-    data
+    data,
 
 
 )

@@ -13,7 +13,7 @@ from django.core.cache import cache
 from .forms import OrderForm
 
 def data(request):
-	query = request.GET.get("exchange_symbol")
+	query = request.GET.get("exchange_symbol","")
 	if "exchange_symbol" in request.GET:
 		if query in cache:
 			context=cache.get(query)
@@ -32,10 +32,25 @@ def data(request):
 def home(request):
 	form = OrderForm(request.POST or request.GET or None)
 	if request.method == "POST":
-		if form.is_valid():
-			print(form.data)
-			form.save()
-			return HttpResponse("success")
+		query = request.GET.get("exchange_symbol","")
+		if "exchange_symbol" in request.GET:
+			if query in cache:
+				context=cache.get(query)
+				symbols_cache = list()
+				for symbol in context:
+					symbols_cache.append(symbol.stock_symbols)
+				return JsonResponse(symbols_cache, safe=False)
+			else:
+				context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
+				symbols = list()
+				for symbol in context:
+					symbols.append(symbol.stock_symbols)
+				cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)	
+				return JsonResponse(symbols, safe=False)
+			if form.is_valid():
+				print(form.data)
+				form.save()
+				return HttpResponse("success")
 	return render(request,"index.html",{"form":form})
 
 
