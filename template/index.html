@@ -1,35 +1,11 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>       
-
-
-
-<script>
-	$(function () {
-		$("#id_exchange_symbol").autocomplete({
-			source: function (request, response) {
-				$.ajax({
-					url: "{% url 'home' %}",
-					data: {
-						stock_symbols:""
-					},
-					dataType: "json",
-					success: response,
-					minLength: 2,
-					error: function () {
-						response([]);
-					}
-				});
-
-			}
-
-		});
-	});
-</script>
 {% endblock head %}
 {% block content %}
 {% load crispy_forms_tags %}
+
+    
+
 
 
 
@@ -157,7 +133,7 @@
 			</div>
 		</div>
 	</main>
-	<script>
+		<script>
 		function logout() {
 			document.location = "{% url 'account_logout' %}"
 
@@ -167,21 +143,7 @@
 			document.location = "{% url 'api' %}"
 		}
 	</script>
-	<script>
-		$('#add').on('click', function(e) {
-			$.ajax({
-				url : '/',
-				type : 'GET',
-				dataType : 'json',
-				success : function(data) {
-					$('#table_id').append("<tr><td>" + "{{ form.exchange_symbol|as_crispy_field }}" + "</td><td>" + data.column2 + "</td><td>" + data.column3 + "</td></tr>");
-				},
-				error : function() {
-					console.log('error');
-				}
-			});
-		});
-	</script>
+	
 	<!-- <script>
 		$("<tr><td>.....content...<td><a class='remove'>remove</a>").appendTo("#tableid tbody").find('.remove').click(function () {
 			$(this).parent().parent().remove();

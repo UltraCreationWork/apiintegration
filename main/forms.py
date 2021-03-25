@@ -33,7 +33,7 @@ class OrderForm(forms.ModelForm):
         model = PlaceOrder
         fields = ["exchange_symbol","input_symbol","exchange_name","instrumentname","entryordertype","exitordertype","quantity","product_type","max_profit","max_loss","strategy_tag"]
         widgets = {
-        "exchange_symbol"   :       forms.TextInput(attrs={"placeholder":"Symbol"}),
+        "exchange_symbol"   :       forms.TextInput(attrs={"placeholder":"Symbol","class":"basicAutoComplete", "data-url":"/data/"}),
         "input_symbol"      :       forms.TextInput(attrs={"placeholder":"InputSymbol"}),
         "instrumentname"    :       forms.TextInput(attrs={"placeholder":"InstrumentName"}),
         "quantity"          :       forms.NumberInput(attrs={"placeholder":"Quantity"}),

@@ -13,45 +13,60 @@ from django.core.cache import cache
 from .forms import OrderForm
 
 def data(request):
-	query = request.GET.get("exchange_symbol","")
-	if "exchange_symbol" in request.GET:
-		if query in cache:
-			context=cache.get(query)
-			symbols_cache = list()
-			for symbol in context:
-				symbols_cache.append(symbol.stock_symbols)
-			return JsonResponse(symbols_cache, safe=False)
-		else:
-			context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
-			symbols = list()
-			for symbol in context:
-				symbols.append(symbol.stock_symbols)
-			cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)	
-			return JsonResponse(symbols, safe=False)
+	if request.is_ajax():
+		q = request.GET.get('term', '')
+		print(request.GET)
+		print(q)
+		data = StockSymbolTable.objects.filter(stock_symbols__istartswith=q)
+		symbols = []
+		for dt in data:
+			symbols.append(dt.stock_symbols)
+		return JsonResponse(symbols, safe=False)
+	else:
+		data = "failed to found"
+		return JsonResponse(data, safe=False)
+
+	
+
+
+	# 	query = request.GET.get("term","")
+	# if "term" in request.GET:
+	# 	if query in cache:
+	# 		context=cache.get(query)
+	# 		symbols_cache = list()
+	# 		for symbol in context:
+	# 			symbols_cache.append(symbol.stock_symbols)
+	# 		return JsonResponse(symbols_cache, safe=False)
+	# 	else:
+	# 		context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
+	# 		symbols = list()
+	# 		for symbol in context:
+	# 			symbols.append(symbol.stock_symbols)
+	# 		cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)	
+	# 		return JsonResponse(symbols, safe=False)
 		
 def home(request):
 	form = OrderForm(request.POST or request.GET or None)
+	total_symbols_count = StockSymbolTable.objects.all().count()
+	query = request.GET.get("exchange_symbol","")
+
+	if request.is_ajax():
+		q = request.GET.get('term', '')
+		print(q)
+		if q in request.GET.get('term', ''):
+			data = StockSymbolTable.objects.filter(stock_symbols__istartswith=q)
+			symbols = []
+			for dt in data:
+				symbols.append(dt.stock_symbols)
+			return JsonResponse(symbols, safe=False)
+		else:
+			JsonResponse("failed to load data", safe=False)
 	if request.method == "POST":
-		query = request.GET.get("exchange_symbol","")
-		if "exchange_symbol" in request.GET:
-			if query in cache:
-				context=cache.get(query)
-				symbols_cache = list()
-				for symbol in context:
-					symbols_cache.append(symbol.stock_symbols)
-				return JsonResponse(symbols_cache, safe=False)
-			else:
-				context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
-				symbols = list()
-				for symbol in context:
-					symbols.append(symbol.stock_symbols)
-				cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)	
-				return JsonResponse(symbols, safe=False)
 			if form.is_valid():
 				print(form.data)
 				form.save()
 				return HttpResponse("success")
-	return render(request,"index.html",{"form":form})
+	return render(request,"index.html",{"form":form, "total_symbols_count": total_symbols_count})
 
 
 
