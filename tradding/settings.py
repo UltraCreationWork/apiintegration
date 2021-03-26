@@ -183,7 +183,6 @@ SERVER_EMAIL = 'ishwarjethwaniillustration@gmail.com'
 
 
 django_heroku.settings(locals())
-REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 CACHE_TTL = 60 * 5
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
