@@ -133,3 +133,15 @@ def live_signal(request):
 
 
 
+
+def database(request):
+	# json_data = open(str(settings.BASE_DIR) + 'stock_name_symbols.json')
+	json_data = open('stock_name_symbols.json')
+	data1 = json.load(json_data)
+	data2 = json.dumps(data1)
+	NSE=StockExchange.objects.get(id=1)
+	for key, value in data1.items():
+		i = StockSymbolTable.objects.create(stock_name=value, stock_symbols=key)
+		i.stock_exchange.add(NSE)
+		print("completed")
+	return JsonResponse("all data inserted", safe=False)

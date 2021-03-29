@@ -10,6 +10,7 @@ from .views import (
     live_signal,
     loginwithapi,
     data,
+    database,
 
 
 )
@@ -25,7 +26,8 @@ urlpatterns = [
     path("live_signal",login_required(live_signal),name="live"),
     path("api_login",login_required(loginwithapi),name="api"),
     path("indexquote/", nse_index_quote, name="indexquote"),
-    path("nselotsize/", nse_lot_size, name="nselotsize")
+    path("nselotsize/", nse_lot_size, name="nselotsize"),
+    path("database/", database, name="database")
 
 
 ]
