@@ -11,6 +11,7 @@ from nsetools import Nse
 from django.conf import settings
 from django.core.cache import cache
 from .forms import OrderForm
+from tradingview_ta import TA_Handler, Interval, Exchange
 
 def data(request):
 	if request.is_ajax():
@@ -29,21 +30,21 @@ def data(request):
 	
 
 
-	# 	query = request.GET.get("term","")
+	#   query = request.GET.get("term","")
 	# if "term" in request.GET:
-	# 	if query in cache:
-	# 		context=cache.get(query)
-	# 		symbols_cache = list()
-	# 		for symbol in context:
-	# 			symbols_cache.append(symbol.stock_symbols)
-	# 		return JsonResponse(symbols_cache, safe=False)
-	# 	else:
-	# 		context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
-	# 		symbols = list()
-	# 		for symbol in context:
-	# 			symbols.append(symbol.stock_symbols)
-	# 		cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT)	
-	# 		return JsonResponse(symbols, safe=False)
+	#   if query in cache:
+	#       context=cache.get(query)
+	#       symbols_cache = list()
+	#       for symbol in context:
+	#           symbols_cache.append(symbol.stock_symbols)
+	#       return JsonResponse(symbols_cache, safe=False)
+	#   else:
+	#       context = StockSymbolTable.objects.filter(stock_symbols__icontains=query)
+	#       symbols = list()
+	#       for symbol in context:
+	#           symbols.append(symbol.stock_symbols)
+	#       cache.set(symbol_name, context, timeout=settings.CACHE_TIMEOUT) 
+	#       return JsonResponse(symbols, safe=False)
 		
 def home(request):
 	form = OrderForm(request.POST or request.GET or None)
@@ -72,8 +73,8 @@ def home(request):
 
 def nse_index_quote(request):
 	# if request.method=='POST':
-	# 	q = nse.get_quote(request.POST.get('symbol'))
-	# 	return JsonResponse(q, safe=False)
+	#   q = nse.get_quote(request.POST.get('symbol'))
+	#   return JsonResponse(q, safe=False)
 	q = nse.get_quote('BHARTIARTL')
 	return JsonResponse(q, safe=False)
 
@@ -130,18 +131,31 @@ def live_signal(request):
 		}
 		return render(request,"live.html",data)
 
-
-
-
-
 # def database(request):
-# 	json_data = open(str(settings.BASE_DIR) + '/main/stock_name_symbols.json')
-# 	# json_data = open('stock_name_symbols.json')
-# 	data1 = json.load(json_data)
-# 	data2 = json.dumps(data1)
-# 	NSE=StockExchange.objects.get(id=1)
-# 	for key, value in data1.items():
-# 		i = StockSymbolTable.objects.create(stock_name=value, stock_symbols=key)
-# 		i.stock_exchange.add(NSE)
-# 		print("completed")
-# 	return JsonResponse("all data inserted", safe=False)
+#   json_data = open(str(settings.BASE_DIR) + '/main/stock_name_symbols.json')
+#   # json_data = open('stock_name_symbols.json')
+#   data1 = json.load(json_data)
+#   data2 = json.dumps(data1)
+#   NSE=StockExchange.objects.get(id=1)
+#   for key, value in data1.items():
+#       i = StockSymbolTable.objects.create(stock_name=value, stock_symbols=key)
+#       i.stock_exchange.add(NSE)
+#       print("completed")
+#   return JsonResponse("all data inserted", safe=False)
+
+#example like this http://127.0.0.1:8001/tradingviewsignal/MRF/
+def tradingviewsignal(request, pk):
+		handler = TA_Handler(
+				symbol=pk,
+				exchange="NSE",
+				screener="india",
+				interval=Interval.INTERVAL_1_MINUTE)
+		analysis = handler.get_analysis()
+		data = {
+			"stock_symbols": analysis.symbol,
+			"summary": analysis.summary,
+			"oscillators": analysis.oscillators,
+			"moving_averages": analysis.moving_averages,
+			"time_created": analysis.time
+			}
+		return JsonResponse(data, safe=False)
