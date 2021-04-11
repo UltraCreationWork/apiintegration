@@ -12,6 +12,8 @@ from django.conf import settings
 from django.core.cache import cache
 from .forms import OrderForm
 from tradingview_ta import TA_Handler, Interval, Exchange
+from nsetools import Nse
+nse = Nse()
 
 def data(request):
 	if request.is_ajax():
@@ -159,3 +161,51 @@ def tradingviewsignal(request, pk):
 			"time_created": analysis.time
 			}
 		return JsonResponse(data, safe=False)
+
+def signal_top_gainers(request):
+	top_gainer_nsetools = nse.get_top_gainers()
+	list_symbols = []
+	signal_data = []
+	for i in top_gainer_nsetools:
+		list_symbols.append(i["symbol"])
+	for i in list_symbols:
+		handler = TA_Handler(
+				symbol=i,
+				exchange="NSE",
+				screener="india",
+				interval=Interval.INTERVAL_1_MINUTE)
+		analysis = handler.get_analysis()
+		data = {
+			"stock_symbols": analysis.symbol,
+			"summary": analysis.summary,
+			"oscillators": analysis.oscillators,
+			"moving_averages": analysis.moving_averages,
+			"time_created": analysis.time
+			}
+		signal_data.append(data)
+	return JsonResponse(signal_data, safe=False)
+
+def signal_top_losers(request):
+	top_gainer_nsetools = nse.get_top_losers()
+	list_symbols = []
+	signal_data = []
+	for i in top_gainer_nsetools:
+		list_symbols.append(i["symbol"])
+	for i in list_symbols:
+		handler = TA_Handler(
+				symbol=i,
+				exchange="NSE",
+				screener="india",
+				interval=Interval.INTERVAL_1_MINUTE)
+		analysis = handler.get_analysis()
+		data = {
+			"stock_symbols": analysis.symbol,
+			"summary": analysis.summary,
+			"oscillators": analysis.oscillators,
+			"moving_averages": analysis.moving_averages,
+			"time_created": analysis.time
+			}
+		signal_data.append(data)
+	return JsonResponse(signal_data, safe=False)
+
+

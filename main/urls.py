@@ -10,11 +10,11 @@ from .views import (
     live_signal,
     loginwithapi,
     data,
-    tradingviewsignal
-    # database,
+    tradingviewsignal,
+    signal_top_gainers,
+    signal_top_losers
+    )
 
-
-)
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -28,7 +28,9 @@ urlpatterns = [
     path("api_login",login_required(loginwithapi),name="api"),
     path("indexquote/", nse_index_quote, name="indexquote"),
     path("nselotsize/", nse_lot_size, name="nselotsize"),
-    path("tradingviewsignal/<str:pk>/", tradingviewsignal, name="tradingviewsignal")
+    path("tradingviewsignal/<str:pk>/", tradingviewsignal, name="tradingviewsignal"),
+    path("topgainersignal/",signal_top_gainers,name="topgainersignal"),
+    path("toplosersignal/",signal_top_losers,name="toplosersignal")
     # path("database/", database, name="database")
 
 

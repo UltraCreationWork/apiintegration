@@ -19,6 +19,7 @@ django-crispy-forms==1.11.2
 django-filter==2.4.0
 django-heroku==0.3.1
 django-redis==4.12.1
+django-redis-cache==3.0.0
 django-storages==1.11.1
 finnhub-python==2.4.0
 fyers-api==1.0.9
@@ -31,7 +32,9 @@ lazy-object-proxy==1.5.2
 lxml==4.6.2
 mccabe==0.6.1
 nsetools==1.0.11
+numpy==1.20.2
 oauthlib==3.1.0
+pandas==1.2.3
 psycopg2==2.8.6
 pycparser==2.20
 PyJWT==2.0.1
@@ -52,4 +55,3 @@ tradingview-ta==3.2.2
 urllib3==1.26.3
 whitenoise==5.2.0
 wrapt==1.12.1
-django-redis-cache==3.0.0
