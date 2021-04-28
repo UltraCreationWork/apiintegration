@@ -12,7 +12,13 @@ from .views import (
     data,
     tradingviewsignal,
     signal_top_gainers,
-    signal_top_losers
+    signal_top_losers,
+    top_losers_list,
+    top_gainers_list,
+    nsetop50list,
+    bsetop30list,
+    signal_nse_50,
+    database
     )
 
 from django.contrib.auth.decorators import login_required
@@ -29,9 +35,14 @@ urlpatterns = [
     path("indexquote/", nse_index_quote, name="indexquote"),
     path("nselotsize/", nse_lot_size, name="nselotsize"),
     path("tradingviewsignal/<str:pk>/", tradingviewsignal, name="tradingviewsignal"),
-    path("topgainersignal/",signal_top_gainers,name="topgainersignal"),
-    path("toplosersignal/",signal_top_losers,name="toplosersignal")
-    # path("database/", database, name="database")
+    path("topgainersignal",signal_top_gainers,name="topgainersignal"),
+    path("toplosersignal",signal_top_losers,name="toplosersignal"),
+    path("toploserlist",top_losers_list,name="toploserlist"),
+    path("topgainerlist",top_gainers_list,name="topgainerlist"),
+    path("nse50",nsetop50list,name="nse50"),
+    path("bse30",bsetop30list,name="bse30"),
+    path("signalnse50",signal_nse_50,name="signalnse50"),
+    path("database/", login_required(database), name="database")
 
 
 ]

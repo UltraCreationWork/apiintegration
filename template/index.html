@@ -42,12 +42,12 @@
 						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 							<thead>
 								<tr>
+									<th>TransactionType</th>
 									<th>ExchangeSymbol</th>
 									<th>InputSymbol</th>
 									<th>Exchange</th>
 									<th>InstrumentName</th>
-									<th>EntryOrderType</th>
-									<th>ExitOrderType</th>
+									<th>OrderType</th>
 									<th>Quantity</th>
 									<th>ProductType</th>
 									<th>MaxProfit</th>
@@ -61,6 +61,9 @@
 									<form method="POST" action=".">
 										{% csrf_token %}
 										<td>
+											{{ form.transaction_type|as_crispy_field }}
+										</td>
+										<td>
 											{{ form.exchange_symbol|as_crispy_field }}
 										</td>
 										<td>
@@ -73,10 +76,7 @@
 											{{ form.instrumentname|as_crispy_field }}
 										</td>
 										<td>
-											{{ form.entryordertype|as_crispy_field }}
-										</td>
-										<td>
-											{{ form.exitordertype|as_crispy_field }}
+											{{ form.ordertype|as_crispy_field }}
 										</td>
 										<td>
 											{{ form.quantity|as_crispy_field }}

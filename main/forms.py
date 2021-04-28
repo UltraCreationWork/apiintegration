@@ -31,14 +31,14 @@ class OrderForm(forms.ModelForm):
 
     class Meta:
         model = PlaceOrder
-        fields = ["exchange_symbol","input_symbol","exchange_name","instrumentname","entryordertype","exitordertype","quantity","product_type","max_profit","max_loss","strategy_tag"]
+        fields = ["transaction_type","exchange_symbol","input_symbol","exchange_name","instrumentname","ordertype","quantity","product_type","max_profit","max_loss","strategy_tag", "alice_blue_order_id"]
         widgets = {
-        "exchange_symbol"   :       forms.TextInput(attrs={"placeholder":"Symbol","class":"basicAutoComplete", "data-url":"/data/"}),
-        "input_symbol"      :       forms.TextInput(attrs={"placeholder":"InputSymbol"}),
-        "instrumentname"    :       forms.TextInput(attrs={"placeholder":"InstrumentName"}),
-        "quantity"          :       forms.NumberInput(attrs={"placeholder":"Quantity"}),
-        "max_profit"        :       forms.NumberInput(attrs={"placeholder":"MaxProfit"}),
-        "max_loss"          :       forms.NumberInput(attrs={"placeholder":"MaxLoss"}),
+            "exchange_symbol"   :       forms.TextInput(attrs={"placeholder":"Symbol","class":"basicAutoComplete", "data-url":"/data/"}),
+            "input_symbol"      :       forms.TextInput(attrs={"placeholder":"InputSymbol"}),
+            "instrumentname"    :       forms.TextInput(attrs={"placeholder":"InstrumentName"}),
+            "quantity"          :       forms.NumberInput(attrs={"placeholder":"Quantity"}),
+            "max_profit"        :       forms.NumberInput(attrs={"placeholder":"MaxProfit"}),
+            "max_loss"          :       forms.NumberInput(attrs={"placeholder":"MaxLoss"}),
 
         }
 

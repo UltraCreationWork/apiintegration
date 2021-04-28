@@ -2,9 +2,26 @@ from django.db import models
 from django.db.models import Model as M
 from .utils import unique_order_id_generator
 from django.db.models.signals import pre_save
+import enum
 
 # from django_postgres_extensions.models.fields import ArrayField
 # Create your models here.
+class TransactionType(enum.Enum):
+    Buy = 'BUY'
+    Sell = 'SELL'
+
+class OrderType(enum.Enum):
+    Market = 'MARKET'
+    Limit = 'LIMIT'
+    StopLossLimit = 'SL'
+    StopLossMarket = 'SL-M'
+
+class ProductType(enum.Enum):
+    Intraday = 'I'
+    Delivery = 'D'
+    CoverOrder = 'CO'
+    BracketOrder = 'BO'
+
 class StockExchange(M):
 	exchange_name = models.CharField(max_length=20, verbose_name="Exchange Name")
 
@@ -53,24 +70,47 @@ type_=(
 	("Market","Market"),
 )
 
-product_type = (
-	("MIS","MIS"),
-)
-
 stratgy = (
 	("START1","START1"),
 	("START2","START2"),
 	("START3","START3"),
 )
 
+order_type = (
+	("MARKET","Market"),
+	("LIMIT","Limit"),
+	("SL","StopLossLimit"),
+	("SL-M","StopLossMarket"),
+	)
+product_type = (
+	("I","Intraday"),
+	("D","Delivery"),
+	("CO","CoverOrder"),
+	("BO","BracketOrder"),
+	)
+transaction_type = (
+	("BUY","Buy"),
+	("SELL","Sell"),
+	)
+
+ 
+
+
+
+
 class PlaceOrder(M):
+	transaction_type = models.CharField(choices=transaction_type,max_length=50,verbose_name="TransactionType")
 	order_id  = models.CharField(max_length=120,blank=True,unique=True)
+	alice_blue_order_id = models.CharField(max_length=200,blank=True,verbose_name="alice_blue_order_id")
 	exchange_symbol = models.CharField(max_length=20,verbose_name="ExChange Symbol")
 	input_symbol = models.CharField(max_length=20,verbose_name="Input Symbol")
-	exchange_name = models.ManyToManyField(StockExchange)
+	exchange_name = models.CharField(max_length=15,verbose_name="ExChange",choices=(
+		("NSE","NSE"),
+		("BSE","BSE"),
+		("MCX","MCX"),
+		("FUTURE OPTION","FUTURE OPTION")))
 	instrumentname = models.CharField(max_length=20,verbose_name="InstrumentName")
-	entryordertype = models.CharField(choices=type_,max_length=50,verbose_name="EntryOrederType")
-	exitordertype = models.CharField(choices=type_,max_length=50,verbose_name="ExitOrederType")
+	ordertype = models.CharField(choices=order_type,max_length=50,verbose_name="OrederType")
 	quantity = models.PositiveIntegerField(verbose_name="Quantity")
 	product_type = models.CharField(choices=product_type,max_length=50,verbose_name="PoductType")
 	max_profit = models.FloatField(verbose_name="Maximum Profit")
