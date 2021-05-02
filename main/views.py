@@ -381,5 +381,50 @@ def signal_nse_50(request):
 		cache.set(nse_50, signal_data, timeout=settings.CACHE_TIMEOUT)
 		return JsonResponse(signal_data, safe=False)
 
-def aliceblueorderplace(request):
-	pass
+def aliceblueordercancellation(request):
+	access_token = "access_token"
+	if request.method=="POST":
+		order_id = request.POST["order_id"]
+		if order_id:
+			if access_token in cache:
+				alice_blue = alice_blue_object(cache.get(access_token))
+				cancel_order_response = alice_blue.cancel_order(order_id)
+				return JsonResponse(cancel_order_response, safe=False)
+			else:
+				access_token = alice_blue_login()
+				alice_blue = alice_blue_object(access_token)
+				cancel_order_response = alice_blue.cancel_order(order_id)
+				return JsonResponse(cancel_order_response, safe=False)
+		else:
+			return JsonResponse("Enter Order Id", safe=False)
+
+
+def aliceblueorderhistory(request):
+	access_token = "access_token"
+	if request.method=="POST":
+		order_id = request.POST["order_id"]
+		if order_id:
+			if access_token in cache:
+				alice_blue = alice_blue_object(cache.get(access_token))
+				order_history_response = alice_blue.get_order_history(order_id)
+				return JsonResponse(order_history_response, safe=False)
+			else:
+				access_token = alice_blue_login()
+				alice_blue = alice_blue_object(access_token)
+				order_history_response = alice_blue.get_order_history(order_id)
+				return JsonResponse(order_history_response, safe=False)
+		else:
+			return JsonResponse("Enter Order Id", safe=False)
+
+
+def aliceblueallorderhistory(request):
+	access_token = "access_token"
+	if access_token in cache:
+		alice_blue = alice_blue_object(cache.get(access_token))
+		all_order_history_response = alice_blue.get_order_history()
+		return JsonResponse(all_order_history_response, safe=False)
+	else:
+		access_token = alice_blue_login()
+		alice_blue = alice_blue_object(access_token)
+		all_order_history_response = alice_blue.get_order_history()
+		return JsonResponse(all_order_history_response, safe=False)
