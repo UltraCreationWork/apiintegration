@@ -24,7 +24,7 @@
                                 Total Symbols
                             </div>
                             <div class="col-md-4">
-                                {{ symbols }}
+                                {{ stock_symbols }}
                             </div>
                             
                         </div>
@@ -35,33 +35,18 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>ExchangeSymbol</th>
-                                    <th>InputSymbol</th>
-                                    <th>Exchange</th>
-                                    <th>InstrumentName</th>
-                                    <th>EntryOrderType</th>
-                                    <th>ExitOrderType</th>
-                                    <th>Quantity</th>
-                                    <th>ProductType</th>
-                                    <th>MaxProfit</th>
-                                    <th>MaxLoss</th>
-                                    <th>StrategyTag</th>
+                                    <th>Stock Symbol</th>
+                                    <th>Recommendation</th>
+                                    <th>Time</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr style="background-color:{{ color }};">
-                                    <td>RAMCOCEM</td>
-                                    <td>RAMCOCEM#</td>
-                                    <td>NSECM</td>
-                                    <td>EQ</td>
-                                    <td>Market</td>
-                                    <td>Market</td>
-                                    <td>500</td>
-                                    <td>MIS</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>START1</td>
+                                    <td>{{stock_symbols}}</td>
+                                    <td>{{Recommendation}}</td>
+                                    <td>{{time}}</td>
+
                                     <td><button type="button" class="btn btn-outline-danger"><i class="fa fa-trash"
                                                 aria-hidden="true"></i></button></td>
                                 </tr>

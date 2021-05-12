@@ -200,22 +200,85 @@ def loginwithapi(request):
 def signal_source(request):
 	return render(request,"source.html")
 
-def live_signal(request):
-	option = ["sell","buy"]
-	signal = random.choice(option)
-	color = "" 
-	if signal == "buy":
-		color = "#F3CDCD"
-		data = {
-		"color":color
-		}
-		return render(request,"live.html",data)
+def live_signal(request,pk):
+	list_of_symbol = StockSymbolTable.objects.all()
+	list_data = list()
+	for i in list_of_symbol:
+		print(i.stock_symbols)
+		list_data.append(i.stock_symbols)
+	print(list_data)
+	symbol = random.sample(list_data,15)
+	print("ramdom sample",symbol)
+	color = ""
+	
+	tradingviewdata = symbol
+	print(tradingviewdata)
+	if tradingviewdata in cache:
+		signal_data = cache.get(tradingviewdata)
+		if signal_data["summary"]["RECOMMENDATION"]=="SELL" or signal_data["summary"]["RECOMMENDATION"]=="STRONG_SELL" :
+			color = "#F3CDCD"
+			context = {
+				"color":color,
+				"time": signal_data["time_created"],
+				"stock_symbols":signal_data["stock_symbols"],
+				"Recommendation":signal_data["summary"]["RECOMMENDATION"]
+
+			}
+			return render(request,"live.html",context)
+		else:
+			color = "#C7F2C8"
+			context = {
+				"color":color,
+				"time": signal_data["time_created"],
+				"stock_symbols":signal_data["stock_symbols"],
+				"Recommendation":signal_data["summary"]["RECOMMENDATION"]
+
+			}
+			return render(request,"live.html",context)
+
 	else:
-		color = "#C7F2C8"
-		data = {
-		"color":color
-		}
-		return render(request,"live.html",data)
+		try:
+			handler = TA_Handler(
+					symbol=tradingviewdata,
+					exchange="NSE",
+					screener="india",
+					interval=Interval.INTERVAL_5_MINUTES)
+			analysis = handler.get_analysis()
+			print("symbol_tradingview signal",analysis)
+			data = {
+				"stock_symbols": analysis.symbol,
+				"summary": analysis.summary,
+				"oscillators": analysis.oscillators,
+				"moving_averages": analysis.moving_averages,
+				"time_created": analysis.time
+				}
+			cache.set(tradingviewdata, data, timeout=60*5)
+			if data["summary"]["RECOMMENDATION"]=="SELL" or data["summary"]["RECOMMENDATION"]=="STRONG_SELL":
+				color = "#F3CDCD"
+				context = {
+					"color":color,
+					"time": data["time_created"],
+					"stock_symbols":data["stock_symbols"],
+					"Recommendation":data["summary"]["RECOMMENDATION"]
+
+				}
+				return render(request,"live.html",context)
+			else:
+				color = "#C7F2C8"
+				context = {
+					"color":color,
+					"time": data["time_created"],
+					"stock_symbols":data["stock_symbols"],
+					"Recommendation":data["summary"]["RECOMMENDATION"]
+
+				}
+				return render(request,"live.html",context)
+		except Exception:
+			return render(request,"live.html",{"stock_symbols":"Empaty"})
+
+	
+
+
 
 def database(request):
   json_data = open(str(settings.BASE_DIR) + '/main/stock_name_symbols.json')

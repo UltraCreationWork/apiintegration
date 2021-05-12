@@ -18,7 +18,9 @@ from .views import (
     nsetop50list,
     bsetop30list,
     signal_nse_50,
-    database
+    database,
+    aliceblueallorderhistory
+
     )
 
 from django.contrib.auth.decorators import login_required
@@ -30,11 +32,11 @@ urlpatterns = [
     path("order_history/",login_required(order_history),name="order"),
     path("trade_history/",login_required(trade_history),name="trade"),
     path("source/",login_required(signal_source),name="source"),
-    path("live_signal",login_required(live_signal),name="live"),
+    path("live_signal/<str:pk>/",login_required(live_signal),name="live"),
     path("api_login",login_required(loginwithapi),name="api"),
     path("indexquote/", nse_index_quote, name="indexquote"),
     path("nselotsize/", nse_lot_size, name="nselotsize"),
-    path("tradingviewsignal/<str:pk>/", tradingviewsignal, name="tradingviewsignal"),
+    path("tradingviewsignal/", tradingviewsignal, name="tradingviewsignal"),
     path("topgainersignal",signal_top_gainers,name="topgainersignal"),
     path("toplosersignal",signal_top_losers,name="toplosersignal"),
     path("toploserlist",top_losers_list,name="toploserlist"),
@@ -42,7 +44,8 @@ urlpatterns = [
     path("nse50",nsetop50list,name="nse50"),
     path("bse30",bsetop30list,name="bse30"),
     path("signalnse50",signal_nse_50,name="signalnse50"),
-    path("database/", login_required(database), name="database")
+    path("database/", login_required(database), name="database"),
+    path("history/",aliceblueallorderhistory,name="history")
 
 
 ]
