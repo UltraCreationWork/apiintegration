@@ -204,39 +204,37 @@ def live_signal(request,pk):
 	list_of_symbol = StockSymbolTable.objects.all()
 	list_data = list()
 	for i in list_of_symbol:
-		print(i.stock_symbols)
 		list_data.append(i.stock_symbols)
-	print(list_data)
 	symbol = random.sample(list_data,15)
-	print("ramdom sample",symbol)
 	color = ""
-	
+	print(symbol)
+
 	tradingviewdata = symbol
-	print(tradingviewdata)
-	if tradingviewdata in cache:
-		signal_data = cache.get(tradingviewdata)
-		if signal_data["summary"]["RECOMMENDATION"]=="SELL" or signal_data["summary"]["RECOMMENDATION"]=="STRONG_SELL" :
-			color = "#F3CDCD"
-			context = {
-				"color":color,
-				"time": signal_data["time_created"],
-				"stock_symbols":signal_data["stock_symbols"],
-				"Recommendation":signal_data["summary"]["RECOMMENDATION"]
+	# if tradingviewdata in cache:
+	# 	signal_data = cache.get(tradingviewdata)
+	# 	if signal_data["summary"]["RECOMMENDATION"]=="SELL" or signal_data["summary"]["RECOMMENDATION"]=="STRONG_SELL" :
+	# 		color = "#F3CDCD"
+	# 		context = {
+	# 			"color":color,
+	# 			"time": signal_data["time_created"],
+	# 			"stock_symbols":signal_data["stock_symbols"],
+	# 			"Recommendation":signal_data["summary"]["RECOMMENDATION"]
 
-			}
-			return render(request,"live.html",context)
-		else:
-			color = "#C7F2C8"
-			context = {
-				"color":color,
-				"time": signal_data["time_created"],
-				"stock_symbols":signal_data["stock_symbols"],
-				"Recommendation":signal_data["summary"]["RECOMMENDATION"]
+	# 		}
+	# 		return render(request,"live.html",context)
+	# 	else:
+	# 		color = "#C7F2C8"
+	# 		context = {
+	# 			"color":color,
+	# 			"time": signal_data["time_created"],
+	# 			"stock_symbols":signal_data["stock_symbols"],
+	# 			"Recommendation":signal_data["summary"]["RECOMMENDATION"]
 
-			}
-			return render(request,"live.html",context)
+	# 		}
+	# 		return render(request,"live.html",context)
 
-	else:
+
+	while True:
 		try:
 			handler = TA_Handler(
 					symbol=tradingviewdata,
@@ -244,7 +242,6 @@ def live_signal(request,pk):
 					screener="india",
 					interval=Interval.INTERVAL_5_MINUTES)
 			analysis = handler.get_analysis()
-			print("symbol_tradingview signal",analysis)
 			data = {
 				"stock_symbols": analysis.symbol,
 				"summary": analysis.summary,
@@ -274,9 +271,9 @@ def live_signal(request,pk):
 				}
 				return render(request,"live.html",context)
 		except Exception:
-			return render(request,"live.html",{"stock_symbols":"Empaty"})
+			continue
 
-	
+		
 
 
 
